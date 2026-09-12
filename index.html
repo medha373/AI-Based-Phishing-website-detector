@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Phishing Website Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="page">
+    <header>
+        <div class="badge">AI SECURITY PROJECT</div>
+        <h1>Phishing Website Detector</h1>
+        <p>Analyze URL characteristics with a machine-learning model.</p>
+    </header>
+
+    <main class="card">
+        <form method="POST">
+            <label for="url">Website URL</label>
+            <div class="input-row">
+                <input id="url" name="url" type="text"
+                       placeholder="https://example.com/login"
+                       value="{{ url }}" required>
+                <button type="submit">Analyze URL</button>
+            </div>
+        </form>
+
+        {% if result %}
+        <section class="result">
+            <div class="result-top">
+                <div>
+                    <span class="small-label">PREDICTION</span>
+                    <h2 class="{{ 'danger' if result.prediction == 'POTENTIALLY PHISHING' else 'safe' }}">
+                        {{ result.prediction }}
+                    </h2>
+                </div>
+                <div class="risk {{ result.risk|lower }}">
+                    {{ result.risk }} RISK
+                </div>
+            </div>
+
+            <div class="score">
+                <div class="score-head">
+                    <span>Phishing probability</span>
+                    <strong>{{ result.probability }}%</strong>
+                </div>
+                <div class="bar"><div style="width: {{ result.probability }}%"></div></div>
+            </div>
+
+            <div class="indicators">
+                <h3>URL indicators</h3>
+                <ul>
+                    {% for item in result.indicators %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
+        {% endif %}
+    </main>
+
+    <footer>
+        Educational project • URL analysis only • Predictions are not a guarantee of safety
+    </footer>
+</div>
+</body>
+</html>
